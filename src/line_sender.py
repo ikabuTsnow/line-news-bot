@@ -1,7 +1,8 @@
 import requests
 ENDPOINTS ={
     "push": "https://api.line.me/v2/bot/message/push",
-    "reply": "https://api.line.me/v2/bot/message/reply"
+    "reply": "https://api.line.me/v2/bot/message/reply",
+    "broadcast": "https://api.line.me/v2/bot/message/broadcast"
 }
 
 def push_message(text: str, user_id: str, token: str) -> None:
@@ -50,5 +51,29 @@ def reply_message(text: str, reply_token: str, token: str) -> None:
         response.raise_for_status()
         return response
     except requests.RequestException as e:
+        print(f"Error sending message: {e}")
+        return None
+    
+def broadcast_message(text: str, token: str) -> None:
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {token}"
+    }
+    payload = {
+        "messages": [
+            {
+                "type": "text",
+                "text": text
+            }
+        ]
+    }
+
+    try:
+        response = requests.post(ENDPOINTS["broadcast"],
+                                json=payload,
+                                headers=headers)
+        response.raise_for_status()
+        return response
+    except  requests.RequestException as e:
         print(f"Error sending message: {e}")
         return None
