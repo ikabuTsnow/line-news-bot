@@ -3,7 +3,7 @@ import feedparser
 FEED_URL = "https://rss.asahi.com/rss/asahi/newsheadlines.rdf"
 
 
-def fetch_news(feed_url: str, max_items: int = 5):
+def fetch_news(feed_url: str, max_items: int = 20):
     feed = feedparser.parse(feed_url)
 
     if getattr(feed, "bozo", False):
@@ -20,7 +20,7 @@ def fetch_news(feed_url: str, max_items: int = 5):
             "description": description,
             "url": url
         })
-    
-    return entries_dict 
+
+    return entries_dict
 
 

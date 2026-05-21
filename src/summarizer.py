@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 import requests
 import time
 import os
+from config import PROMPT_WITH_TOPIC, PROMPT_WITHOUT_TOPIC
 
 load_dotenv()
 api_key = os.getenv("OPENROUTER_API_KEY")
@@ -23,25 +24,16 @@ def summarize(articles: list[dict], topic: str) -> str:
 
         blocks.append(block)
 
-    # プロンプトの整形
-    prompt = """
-    以下のニュース記事を読んで、各記事を指定のフォーマットで出力してください。
-
-    [出力フォーマット]
-    タイトル
-    要約(50~150字の要約文)
-    URL
-
-    ※各記事の間には空行を入れてください
-    ※LINEでのメッセージを意識してください
-    ※フォーマット以外の文章は出力しないでください
-    ※要約はニュースの要点を押さえ、ですます調にし、読者が読みたくなるように書いてください
-
-    [記事データ]
-    """
+    # プロンプト設計
+    prompt=""
+    if topic:
+        prompt = PROMPT_WITH_TOPIC.format(topic=topic)
+    else:
+        prompt = PROMPT_WITHOUT_TOPIC
 
     for block in blocks:
         prompt = f"{prompt}\n{block}"
+
 
     # 要約
     for attempt in range(3):
