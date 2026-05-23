@@ -10,6 +10,9 @@ TOPICS = {
     "経済": "economy",
 }
 
+DEFAULT_TOPIC = "AI technology"
+DEFAULT_FEED_URL = "https://rss.asahi.com/rss/asahi/newsheadlines.rdf"
+
 PROMPT_WITH_TOPIC = """
 以下は複数のニュース記事です。
 この中から「{topic}」に関連する記事を5件選び、

@@ -1,9 +1,7 @@
 import feedparser
+from config import DEFAULT_FEED_URL
 
-FEED_URL = "https://rss.asahi.com/rss/asahi/newsheadlines.rdf"
-
-
-def fetch_news(feed_url: str, max_items: int = 20):
+def fetch_news(feed_url: str = DEFAULT_FEED_URL, max_items: int = 20):
     feed = feedparser.parse(feed_url)
 
     if getattr(feed, "bozo", False):

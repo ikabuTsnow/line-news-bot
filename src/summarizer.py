@@ -2,12 +2,12 @@ from dotenv import load_dotenv
 import requests
 import time
 import os
-from config import PROMPT_WITH_TOPIC, PROMPT_WITHOUT_TOPIC
+from config import PROMPT_WITH_TOPIC, PROMPT_WITHOUT_TOPIC, DEFAULT_TOPIC
 
 load_dotenv()
 api_key = os.getenv("OPENROUTER_API_KEY")
 
-def summarize(articles: list[dict], topic: str) -> str:
+def summarize(articles: list[dict], topic: str = DEFAULT_TOPIC) -> str:
 
     # ニュースの読み取り
     blocks = []
