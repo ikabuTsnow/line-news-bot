@@ -21,6 +21,10 @@ def callback():
         reply_token = event["replyToken"]
         text = event["message"]["text"]
 
+        if not get_user(user_id):
+            save_user(user_id, DEFAULT_TOPIC, DEFAULT_FEED_URL)
+            print("saved_user")
+
         if text in FEED_URLS:
             existing = get_user(user_id)
             topic = existing[0] if existing else ""

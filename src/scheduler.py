@@ -11,21 +11,17 @@ token = os.getenv("CHANNEL_ACCESS_TOKEN")
 
 scheduler = BackgroundScheduler()
 
-@scheduler.scheduled_job("cron", hour=11, minute=32)
+@scheduler.scheduled_job("cron", hour=17, minute=15)
 def fetch_job():
-    print("job_start")
     users = get_all_users()
     for user_id, topic, feed_url in users:
         article = fetch_news(feed_url)
         summary = summarize(article, topic)
         save_summary(user_id, summary)
-    print("fetch_job_complete")
 
-@scheduler.scheduled_job("cron", hour=11, minute=33)
+@scheduler.scheduled_job("cron", hour=17, minute=17)
 def send_job():
-    print("job_start")
     users = get_all_users()
     for user_id, _, _ in users:
         summary = get_summary(user_id)
         push_message(summary, user_id, token)
-    print("send_job_complete")
