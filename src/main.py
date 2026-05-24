@@ -2,9 +2,10 @@ from dotenv import load_dotenv
 import os
 from flask import Flask, request
 from scheduler import scheduler
-from config import FEED_URLS, TOPICS, DEFAULT_FEED_URL, DEFAULT_TOPIC
+from config import FEED_URLS, DEFAULT_FEED_URL, DEFAULT_TOPIC
 from database import init_db, save_user, get_user
-from line_sender import reply_message, send_quick_reply
+from line_sender import reply_message
+from rich_menu import create_rich_menu
 
 load_dotenv()
 my_user_id =os.getenv("USER_ID")
@@ -30,16 +31,12 @@ def callback():
             topic = existing[0] if existing else ""
             save_user(user_id, topic=topic, feed_url=FEED_URLS[text])
             reply_message(f"{text}に設定しました！", reply_token, token)
-
-        elif text in TOPICS:
-            existing = get_user(user_id)
-            feed_url = existing[1] if existing else ""
-            save_user(user_id, topic=TOPICS[text], feed_url=feed_url)
-            reply_message(f"トピックを{text}に設定しました！", reply_token, token)
-
         else:
-            options = list(FEED_URLS.keys()) + list(TOPICS.keys())
-            send_quick_reply("選択肢を選んでください", options, reply_token, token)
+            existing = get_user(user_id)
+            feed_url = existing[1] if existing else DEFAULT_FEED_URL
+            save_user(user_id, topic=text, feed_url=feed_url)
+            reply_message(f"トピックを「{text}」に設定しました！", reply_token, token)
+
     return "OK"
 
 
@@ -47,5 +44,6 @@ if __name__ == "__main__":
     init_db()
     if not get_user(my_user_id):
         save_user(my_user_id, DEFAULT_TOPIC, DEFAULT_FEED_URL)
+    create_rich_menu()
     scheduler.start()
     app.run(port=5000)

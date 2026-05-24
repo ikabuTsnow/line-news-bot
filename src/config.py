@@ -1,13 +1,8 @@
 FEED_URLS = {
     "朝日新聞": "https://rss.asahi.com/rss/asahi/newsheadlines.rdf",
     "NHK": "https://www.nhk.or.jp/rss/news/cat0.xml",
-    "TechCrunch": "https://jp.techcrunch.com/feed/",
-}
-
-TOPICS = {
-    "AI": "AI technology",
-    "スポーツ": "sports",
-    "経済": "economy",
+    "ITmedia": "https://rss.itmedia.co.jp/rss/2.0/itmedia_all.xml",
+    "Impress Watch": "https://www.watch.impress.co.jp/data/rss/1.0/ipw/feed.rdf"
 }
 
 DEFAULT_TOPIC = "AI technology"
