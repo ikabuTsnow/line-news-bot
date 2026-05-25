@@ -64,4 +64,4 @@ if __name__ == "__main__":
         save_user(my_user_id, DEFAULT_TOPIC, DEFAULT_FEED_URL)
     create_rich_menu()
     scheduler.start()
-    app.run(host="0,0,0,0", port=5000)
+    app.run(host="0.0.0.0", port=5000)
