@@ -12,14 +12,12 @@ def create_rich_menu_image(labels: list, button_width: int) -> bytes:
     img = Image.new("RGB", (2500, 843), color=(255, 255, 255))
     draw = ImageDraw.Draw(img)
 
-    # フォントサイズを大きくする
+    font_path = os.path.join(os.path.dirname(__file__), "../fonts/NotoSansJP-Regular.ttf")
+
     try:
-        font = ImageFont.truetype("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc", 100)
+        font = ImageFont.truetype(font_path, 100)
     except OSError:
-        try:
-            font = ImageFont.truetype("C:/Windows/Fonts/msgothic.ttc", 100)
-        except OSError:
-            font = ImageFont.load_default(size=100)
+        font = ImageFont.load_default(size=100)
 
     for i, label in enumerate(labels):
         x = i * button_width
