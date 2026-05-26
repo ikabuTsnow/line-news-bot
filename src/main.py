@@ -16,6 +16,10 @@ token = os.getenv("CHANNEL_ACCESS_TOKEN")
 
 app = Flask(__name__)
 
+@app.route("/health")
+def health():
+    return "OK", 200
+
 @app.route("/callback", methods=["POST"])
 def callback():
     body = request.get_json()
@@ -40,7 +44,7 @@ def callback():
                 topic, feed_url = existing
             else:
                 topic, feed_url = DEFAULT_TOPIC, DEFAULT_FEED_URL
-            
+
             try:
                 reply_message("ニュースを取得中です...", reply_token, token)
                 articles = fetch_news(feed_url)

@@ -1,6 +1,7 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from dotenv import load_dotenv
 import os
+import pytz
 from database import get_all_users, save_summary, get_summary
 from line_sender import push_message
 from news_fetcher import fetch_news
@@ -9,7 +10,9 @@ from summarizer import summarize
 load_dotenv()
 token = os.getenv("CHANNEL_ACCESS_TOKEN")
 
-scheduler = BackgroundScheduler()
+jst = pytz.timezone("Asia/Tokyo")
+
+scheduler = BackgroundScheduler(timezone=jst)
 
 @scheduler.scheduled_job("cron", hour=6, minute=50)
 def fetch_job():
