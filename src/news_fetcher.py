@@ -1,24 +1,32 @@
-import feedparser
-from config import DEFAULT_FEED_URL
+import requests
+import os
+from dotenv import load_dotenv
 
-def fetch_news(feed_url: str = DEFAULT_FEED_URL, max_items: int = 20):
-    feed = feedparser.parse(feed_url)
+load_dotenv()
+gnews_api_key = os.getenv("GNEWS_API_KEY")
 
-    if getattr(feed, "bozo", False):
-        print(f"Feed warning: {feed.get('bozo_exception')}")
-
-    entries = feed.entries[:max_items]
-    entries_dict = []
-    for entry in entries:
-        title = entry.get("title", "")
-        description = entry.get("summary", entry.get("description", ""))
-        url = entry.get("link", "")
-        entries_dict.append({
-            "title": title,
-            "description": description,
-            "url": url
-        })
-
-    return entries_dict
-
-
+def fetch_news(topic: str, max_items: int = 20) -> list[dict]:
+    try:
+        response = requests.get(
+            "https://gnews.io/api/v4/search",
+            params={
+                "q": topic,
+                "lang": "ja",
+                "max": max_items,
+                "apikey": gnews_api_key
+            },
+            timeout=10
+        )
+        response.raise_for_status()
+        articles = response.json().get("articles", [])
+        return [
+            {
+                "title": a.get("title", ""),
+                "description": a.get("description", ""),
+                "url": a.get("url", "")
+            }
+            for a in articles
+        ]
+    except requests.RequestException as e:
+        print(f"Error fetching news: {e}")
+        return []

@@ -3,7 +3,7 @@ import os
 import io
 from dotenv import load_dotenv
 from PIL import Image, ImageDraw, ImageFont
-from config import FEED_URLS
+from config import QUICK_TOPICS
 
 load_dotenv()
 token = os.getenv("CHANNEL_ACCESS_TOKEN")
@@ -13,11 +13,14 @@ def create_rich_menu_image(labels: list, button_width: int) -> bytes:
     draw = ImageDraw.Draw(img)
 
     font_path = os.path.join(os.path.dirname(__file__), "../fonts/NotoSansJP-Regular.ttf")
-
     try:
         font = ImageFont.truetype(font_path, 80)
     except OSError:
-        font = ImageFont.load_default(size=80)
+        try:
+            font = ImageFont.truetype("C:/Windows/Fonts/msgothic.ttc", 80)
+        except OSError:
+            font = ImageFont.load_default(size=80)
+
 
     for i, label in enumerate(labels):
         x = i * button_width
@@ -29,7 +32,8 @@ def create_rich_menu_image(labels: list, button_width: int) -> bytes:
     return buf.getvalue()
 
 def create_rich_menu():
-    button_width = 2500 // len(FEED_URLS)
+    button_width = 2500 // len(QUICK_TOPICS)
+
     areas = [
         {
             "bounds": {
@@ -40,12 +44,13 @@ def create_rich_menu():
             },
             "action": {"type": "message", "text": label}
         }
-        for i, label in enumerate(FEED_URLS.keys())
+        for i, label in enumerate(QUICK_TOPICS)
     ]
+
     rich_menu = {
         "size": {"width": 2500, "height": 843},
         "selected": True,
-        "name": "ニュース設定メニュー",
+        "name": "トピック設定メニュー",
         "chatBarText": "メニューを開く",
         "areas": areas
     }
@@ -62,7 +67,7 @@ def create_rich_menu():
         response.raise_for_status()
         rich_menu_id = response.json()["richMenuId"]
 
-        image_data = create_rich_menu_image(list(FEED_URLS.keys()), button_width)
+        image_data = create_rich_menu_image(QUICK_TOPICS, button_width)
 
         response = requests.post(
             f"https://api-data.line.me/v2/bot/richmenu/{rich_menu_id}/content",
@@ -79,7 +84,8 @@ def create_rich_menu():
             headers={"Authorization": f"Bearer {token}"}
         )
         response.raise_for_status()
+        print("create richmenu")
         return rich_menu_id
     except requests.RequestException as e:
-        print(f"Error sending message: {e}")
+        print(f"Error: {e}")
         return None
