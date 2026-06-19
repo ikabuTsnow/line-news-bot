@@ -2,7 +2,8 @@ from dotenv import load_dotenv
 import requests
 import time
 import os
-from config import PROMPT_WITH_TOPIC, PROMPT_WITHOUT_TOPIC, DEFAULT_TOPIC
+from config import DEFAULT_TOPIC
+from prompts import PROMPT_WITH_TOPIC, PROMPT_WITHOUT_TOPIC
 
 load_dotenv()
 api_key = os.getenv("OPENROUTER_API_KEY")
@@ -58,3 +59,4 @@ def summarize(articles: list[dict], topic: str = DEFAULT_TOPIC) -> str:
 
         except Exception as e:
             print(f"Error was:{e}")
+
