@@ -15,6 +15,10 @@ token = os.getenv("CHANNEL_ACCESS_TOKEN")
 
 app = Flask(__name__)
 
+@app.route("/health")
+def health():
+    return "OK", 200
+
 @app.route("/callback", methods=["POST"])
 def callback():
     body = request.get_json()

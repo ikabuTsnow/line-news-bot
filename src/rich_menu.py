@@ -21,6 +21,7 @@ def create_rich_menu_image(labels: list, button_width: int) -> bytes:
         except OSError:
             font = ImageFont.load_default(size=80)
 
+
     for i, label in enumerate(labels):
         x = i * button_width
         draw.rectangle([x, 0, x + button_width, 843], outline=(200, 200, 200), width=3)
