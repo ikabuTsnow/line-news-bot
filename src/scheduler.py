@@ -34,7 +34,7 @@ def fetch_job():
 def send_news_job():
     print("send_news_job start")
     users = get_all_users()
-    for user_id, _, _ in users:
+    for user_id, _ in users:
         summary = get_summary(user_id)
         push_message(summary, user_id, token)
     print("send_news_job complete")
@@ -43,7 +43,7 @@ def send_news_job():
 def send_quiz_job():
     print("send_quiz_job start")
     users = get_all_users()
-    for user_id, _, _ in users:
+    for user_id, _ in users:
         quiz = get_quiz(user_id)
         if quiz:
             question, answer = quiz
